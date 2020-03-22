@@ -1,0 +1,35 @@
+[
+    {
+        "title": "CV Workshop",
+        "description": "This workshop is for you if you are about to start working or have been drafting your application documentation.",
+        "location": "Hive Helsinki",
+        "start": "2014-02-18T18:00:00",
+        "end": "2014-02-18T18:00:00",
+        "tags": [
+            "hive",
+            "career"
+        ]
+    },
+    {
+        "title": "Hivers Climbing",
+        "description": "Climb with your fellow coders. Entrance is 10€ and shoe rental 4€.",
+        "location": "Redi",
+        "start": "2014-02-18T18:00:00",
+        "end": "2014-02-18T18:00:00",
+        "tags": [
+            "sports"
+        ]
+    },
+    {
+        "title": "Mascot Afterwork",
+        "description": "Welcome to relieve some stress at Mascot. Special offers promised for hive students.",
+        "location": "Helsinki",
+        "start": "2014-02-18T18:00:00",
+        "end": "2014-02-18T18:00:00",
+        "tags": [
+            "hexagon",
+            "party",
+            "chill"
+        ]
+    }
+]
