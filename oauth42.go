@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"errors"
 
 	"golang.org/x/oauth2"
@@ -15,8 +14,8 @@ var (
 
 func getAuthorization() string {
 	// add uid and secret to ENV variables
-	uid := YOUR_CLIENT_ID
-	secret := YOUR_CLIENT_SECRET
+	uid := "044c5b79a54831c1cd1d65cf3a9e08b4d12f885f013b86e86137c03dc478ca7b"
+	secret := "4764c22900f4deb6c07b78283db4ac143d5300fa5b1844a5bd8270b1119d3bd8"
 
 	oauthConf = &oauth2.Config{
 		ClientID:     uid,
@@ -35,7 +34,7 @@ func getAccessToken(code string, state string) (*oauth2.Token, error) {
 	if state != oauthState {
 		return nil, errors.New("Invalid state value")
 	}
-	token, err := oauthConf.Exchange(context.TODO(), code)
+	token, err := oauthConf.Exchange(oauth2.NoContext, code)
 	if err != nil {
 		return nil, err
 	}
