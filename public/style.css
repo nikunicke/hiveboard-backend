@@ -1,0 +1,41 @@
+body {
+    margin: 0;
+    /* background-color: #000c42; */
+    background: url(hive.webp) #000c42;
+    background-size: cover;
+    background-blend-mode: multiply;
+}
+
+.container {
+    position: absolute;
+    /* top: 800px; */
+    bottom: 300px;
+    left: 0px;
+    right: 0px;
+    text-align: center;
+}
+
+h1 {
+    font-family: 'Fugaz One', cursive;
+    color: white;
+    font-size: 110pt;
+    margin-bottom: 20px;
+}
+
+a {
+    font-size: 35pt;
+    font-family: 'Fugaz One', cursive;
+    text-decoration: none;
+    color: white;
+    display: block;
+    width: 30%;
+    margin: auto;
+    background-color: orangered;
+    border-radius: 7px;
+    transition: 0.3s;
+}
+
+a:hover {
+    background-color: #d43900;
+    width: 32%;
+}
