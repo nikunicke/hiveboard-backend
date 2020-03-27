@@ -25,6 +25,7 @@ func GetEvents(url string) ([]hiveboard.Event, error) {
 		return nil, err
 	}
 	body, err := ioutil.ReadAll(response.Body)
+	// fmt.Printf("%v\n", string([]byte(body)))
 	if err != nil {
 		return nil, err
 	}

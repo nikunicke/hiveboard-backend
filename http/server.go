@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/julienschmidt/httprouter"
 	"github.com/nikunicke/hiveboard/authorize"
 )
 
@@ -17,16 +18,18 @@ func Run() {
 	if port == "" {
 		port = "3000"
 	}
-	http.HandleFunc("/", handleHome)
-	http.HandleFunc("/login/", handleLogin)
-	http.HandleFunc("/callback/", handleCallback)
-	http.HandleFunc("/api/events/", handleEvents)
-	http.HandleFunc("/api/user/", handleUser)
+	router := httprouter.New()
+	router.GET("/", handleHome)
+	router.GET("/login/", handleLogin)
+	router.GET("/callback/", handleCallback)
+	router.GET("/api/events/", handleEvents)
+	router.GET("/api/events/:id", handleEvents)
+	router.GET("/api/user/", handleUser)
 	log.Println("Server running on port: " + port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	log.Fatal(http.ListenAndServe(":"+port, router))
 }
 
-func handleHome(w http.ResponseWriter, r *http.Request) {
+func handleHome(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	const html = `
 	<body><center>
 		<a href="/login/">Login</a>
@@ -35,19 +38,19 @@ func handleHome(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, html)
 }
 
-func handleLogin(w http.ResponseWriter, r *http.Request) {
+func handleLogin(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	url := authorize.GetURL()
 	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 }
 
-func handleCallback(w http.ResponseWriter, r *http.Request) {
+func handleCallback(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	authorize.GetToken(r.FormValue("code"), r.FormValue("state"))
 	fmt.Println("Login successful")
 	http.Redirect(w, r, "/api/events/", http.StatusPermanentRedirect)
 }
 
-func handleEvents(w http.ResponseWriter, r *http.Request) {
-	data, err := GetEvents(baseURL + "events")
+func handleEvents(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	data, err := GetEvents(baseURL + "events/" + p.ByName("id"))
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 	}
@@ -55,7 +58,7 @@ func handleEvents(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(data)
 }
 
-func handleUser(w http.ResponseWriter, r *http.Request) {
+func handleUser(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	data, err := GetUser(baseURL + "me")
 	if err != nil {
 		http.Error(w, err.Error(), 500)
