@@ -34,4 +34,5 @@ func GetToken(code string, state string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	hiveboard.Client = hiveboard.OauthConf.Client(oauth2.NoContext, hiveboard.OauthToken)
 }
