@@ -3,9 +3,9 @@ package hiveboard
 import "time"
 
 type EventService interface {
-	GetEvents() (*[]Event, error)
-	FindEventByID(id int) (*Event, error)
-	GetEventParticipands(e *Event) (*[]Participant, error)
+	GetEvents(url string) ([]Event, error)
+	GetEventByID(url string) (*Event, error)
+	// GetEventParticipands(e *Event) (*[]Participant, error)
 }
 
 type Event struct {
