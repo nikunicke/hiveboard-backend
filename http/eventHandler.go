@@ -9,18 +9,6 @@ import (
 	"github.com/nikunicke/hiveboard"
 )
 
-// type EventService struct {
-// 	events []hiveboard.Event
-// }
-
-// var _ hiveboard.EventService = &EventService{}
-
-// func NewEventService() *EventService {
-// 	return &EventService{
-// 		events: nil,
-// 	}
-// }
-
 type eventHandler struct {
 	router       chi.Router
 	baseURL      url.URL
