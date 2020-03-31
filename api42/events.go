@@ -1,4 +1,4 @@
-package bolt
+package api42
 
 import (
 	"encoding/json"
@@ -66,7 +66,7 @@ func (s *EventService) GetEventParticipants(url string) ([]hiveboard.Participant
 	return participants, nil
 }
 
-// Think about moving this method to the userHandler. Right now the url path
+// Think about moving the below method to the userHandler. Right now the url path
 // gets a little bit messy --> domain/events/users/:user_id/events
 
 // domain/users/:user_id/events would work better

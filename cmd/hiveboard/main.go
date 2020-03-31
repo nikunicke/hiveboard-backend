@@ -6,7 +6,7 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/nikunicke/hiveboard/bolt"
+	"github.com/nikunicke/hiveboard/api42"
 	"github.com/nikunicke/hiveboard/http"
 )
 
@@ -26,8 +26,8 @@ func main() {
 func Run() error {
 	httpServer := http.NewServer()
 	httpServer.Addr = ":3000"
-	httpServer.EventService = bolt.NewEventService()
-	httpServer.UserService = bolt.NewUserService()
+	httpServer.EventService = api42.NewEventService()
+	httpServer.UserService = api42.NewUserService()
 	err := httpServer.Open()
 	if err != nil {
 		return err
