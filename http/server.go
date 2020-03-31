@@ -18,6 +18,7 @@ type Server struct {
 	ln net.Listener
 
 	EventService hiveboard.EventService
+	UserService  hiveboard.UserService
 
 	Addr        string
 	Host        string
@@ -65,6 +66,7 @@ func (s *Server) router() http.Handler {
 		r.Get("/login/", handleLogin)
 		r.Get("/callback/", handleCallback)
 		r.Mount("/api/events/", s.eventHandler())
+		r.Mount("/api/user", s.userHandler())
 	})
 	return r
 }
@@ -73,6 +75,13 @@ func (s *Server) eventHandler() *eventHandler {
 	h := newEventHandler()
 	h.baseURL = s.URL()
 	h.eventService = s.EventService
+	return h
+}
+
+func (s *Server) userHandler() *userHandler {
+	h := newUserHandler()
+	h.baseURL = s.URL()
+	h.userService = s.UserService
 	return h
 }
 
@@ -94,58 +103,3 @@ func handleCallback(w http.ResponseWriter, r *http.Request) {
 	authorize.GetToken(r.FormValue("code"), r.FormValue("state"))
 	http.Redirect(w, r, "/api/events/", http.StatusTemporaryRedirect)
 }
-
-// func Run() {
-// 	port := os.Getenv("PORT")
-// 	if port == "" {
-// 		port = "3000"
-// 	}
-// 	router := httprouter.New()
-// 	router.GET("/", handleHome)
-// 	router.GET("/login/", handleLogin)
-// 	router.GET("/callback/", handleCallback)
-// 	router.GET("/api/events/", handleEvents)
-// 	router.GET("/api/events/:id", handleEvents)
-// 	router.GET("/api/user/", handleUser)
-// 	log.Println("Server running on port: " + port)
-// 	log.Fatal(http.ListenAndServe(":"+port, router))
-// }
-
-// func handleHome(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-// 	const html = `
-// 	<body><center>
-// 		<a href="/login/">Login</a>
-// 	</center></body>
-// 	`
-// 	fmt.Fprintf(w, html)
-// }
-
-// func handleLogin(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-// 	url := authorize.GetURL()
-// 	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
-// }
-
-// func handleCallback(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-// 	authorize.GetToken(r.FormValue("code"), r.FormValue("state"))
-// 	fmt.Println("Login successful")
-// 	http.Redirect(w, r, "/api/events/", http.StatusPermanentRedirect)
-// }
-
-// func handleEvents(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-// 	data, err := GetEvents(baseURL + "events/" + p.ByName("id"))
-// 	if err != nil {
-// 		http.Error(w, err.Error(), 500)
-// 	}
-// 	w.Header().Set("Content-Type", "application/json")
-// 	json.NewEncoder(w).Encode(data)
-// }
-
-// func handleUser(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-// 	data, err := GetUser(baseURL + "me")
-// 	if err != nil {
-// 		http.Error(w, err.Error(), 500)
-// 		return
-// 	}
-// 	w.Header().Set("Content-Type", "application/json")
-// 	json.NewEncoder(w).Encode(data)
-// }

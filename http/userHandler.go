@@ -2,35 +2,41 @@ package http
 
 import (
 	"encoding/json"
-	"io/ioutil"
 	"net/http"
+	"net/url"
 
+	"github.com/go-chi/chi"
 	"github.com/nikunicke/hiveboard"
 )
 
-func GetUser(url string) (hiveboard.User, error) {
-	var user hiveboard.User
+const userURL = "https://api.intra.42.fr/v2/me/"
 
-	if hiveboard.OauthToken == nil {
-		return user, hiveboard.ErrAuth
+type userHandler struct {
+	router      chi.Router
+	baseURL     url.URL
+	userService hiveboard.UserService
+}
+
+func newUserHandler() *userHandler {
+	h := &userHandler{router: chi.NewRouter()}
+	h.router.Get("/", h.handleGetUser)
+	return h
+}
+
+func (h *userHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	h.router.ServeHTTP(w, r)
+}
+
+func (h *userHandler) handleGetUser(w http.ResponseWriter, r *http.Request) {
+	if hiveboard.Client == nil {
+		http.Error(w, "Not Authorized", 401)
+		return
 	}
-	request, err := http.NewRequest("GET", url, nil)
+	user, err := h.userService.GetUser(userURL)
 	if err != nil {
-		return user, err
+		http.Error(w, "Internal Server Error", 500)
+		return
 	}
-	request.Header.Add("Authorization", "Bearer "+hiveboard.OauthToken.AccessToken)
-	client := &http.Client{}
-	response, err := client.Do(request)
-	if err != nil {
-		return user, err
-	}
-	body, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		return user, err
-	}
-	err = json.Unmarshal(body, &user)
-	if err != nil {
-		return user, err
-	}
-	return user, nil
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(user)
 }

@@ -2,6 +2,10 @@ package hiveboard
 
 import "time"
 
+type UserService interface {
+	GetUser(url string) (*User, error)
+}
+
 type User struct {
 	ID              int           `json:"id"`
 	Email           string        `json:"email"`

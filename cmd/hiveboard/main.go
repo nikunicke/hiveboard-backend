@@ -18,6 +18,7 @@ func Run() error {
 	httpServer := http.NewServer()
 	httpServer.Addr = ":3000"
 	httpServer.EventService = bolt.NewEventService()
+	httpServer.UserService = bolt.NewUserService()
 	err := httpServer.Open()
 	if err != nil {
 		return err
