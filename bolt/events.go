@@ -65,3 +65,27 @@ func (s *EventService) GetEventParticipants(url string) ([]hiveboard.Participant
 	}
 	return participants, nil
 }
+
+// Think about moving this method to the userHandler. Right now the url path
+// gets a little bit messy --> domain/events/users/:user_id/events
+
+// domain/users/:user_id/events would work better
+// check that ot works with the user bolt package
+func (s *EventService) GetUserEvents(url string) ([]hiveboard.Event, error) {
+	var events []hiveboard.Event
+	response, err := hiveboard.Client.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	body, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return nil, err
+	}
+	if body[0] != '[' {
+		return nil, hiveboard.UserNotFound
+	}
+	if err = json.Unmarshal(body, &events); err != nil {
+		return nil, err
+	}
+	return events, nil
+}

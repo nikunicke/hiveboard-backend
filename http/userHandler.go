@@ -9,7 +9,7 @@ import (
 	"github.com/nikunicke/hiveboard"
 )
 
-const userURL = "https://api.intra.42.fr/v2/me/"
+const userURL = "https://api.intra.42.fr/v2/"
 
 type userHandler struct {
 	router      chi.Router
@@ -32,7 +32,7 @@ func (h *userHandler) handleGetUser(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Not Authorized", 401)
 		return
 	}
-	user, err := h.userService.GetUser(userURL)
+	user, err := h.userService.GetUser(userURL + "me")
 	if err != nil {
 		http.Error(w, "Internal Server Error", 500)
 		return

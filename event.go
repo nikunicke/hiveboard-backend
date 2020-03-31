@@ -6,6 +6,7 @@ type EventService interface {
 	GetEvents(url string) ([]Event, error)
 	GetEventByID(url string) (*Event, error)
 	GetEventParticipants(url string) ([]Participant, error)
+	GetUserEvents(url string) ([]Event, error)
 }
 
 type Event struct {
