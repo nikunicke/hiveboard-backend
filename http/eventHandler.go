@@ -37,7 +37,7 @@ func (h *eventHandler) handleAllEvents(w http.ResponseWriter, r *http.Request) {
 
 	events, err := h.eventService.GetEvents(eventURL)
 	if err != nil {
-		http.Error(w, "Internal Error", 500)
+		http.Error(w, "Internal Server Error", 500)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
@@ -52,7 +52,7 @@ func (h *eventHandler) handleEventByID(w http.ResponseWriter, r *http.Request) {
 	eventID := chi.URLParam(r, "id")
 	event, err := h.eventService.GetEventByID(eventURL + eventID)
 	if err != nil {
-		http.Error(w, "Internal Error", 500)
+		http.Error(w, "Internal Server Error", 500)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
@@ -67,7 +67,7 @@ func (h *eventHandler) handleEventParticipants(w http.ResponseWriter, r *http.Re
 	eventID := chi.URLParam(r, "id")
 	participants, err := h.eventService.GetEventParticipants(eventURL + eventID + "/users")
 	if err != nil {
-		http.Error(w, "Internal Error", 500)
+		http.Error(w, "Internal Server Error", 500)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
