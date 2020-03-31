@@ -5,7 +5,7 @@ import "time"
 type EventService interface {
 	GetEvents(url string) ([]Event, error)
 	GetEventByID(url string) (*Event, error)
-	// GetEventParticipands(e *Event) (*[]Participant, error)
+	GetEventParticipants(url string) ([]Participant, error)
 }
 
 type Event struct {

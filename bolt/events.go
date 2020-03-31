@@ -36,7 +36,8 @@ func (s *EventService) GetEvents(url string) ([]hiveboard.Event, error) {
 }
 
 func (s *EventService) GetEventByID(url string) (*hiveboard.Event, error) {
-	var event hiveboard.Event
+	var event *hiveboard.Event
+
 	response, err := hiveboard.Client.Get(url)
 	if err != nil {
 		return nil, err
@@ -45,7 +46,24 @@ func (s *EventService) GetEventByID(url string) (*hiveboard.Event, error) {
 	if err = json.Unmarshal(body, &event); err != nil {
 		return nil, err
 	}
-	return &event, nil
+	return event, nil
+}
+
+func (s *EventService) GetEventParticipants(url string) ([]hiveboard.Participant, error) {
+	var participants []hiveboard.Participant
+
+	response, err := hiveboard.Client.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	body, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return nil, err
+	}
+	if err = json.Unmarshal(body, &participants); err != nil {
+		return nil, err
+	}
+	return participants, nil
 }
 
 // func (s *EventService) GetEvents(url string) ([]hiveboard.Event, error) {
