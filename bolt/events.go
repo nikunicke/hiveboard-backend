@@ -65,27 +65,3 @@ func (s *EventService) GetEventParticipants(url string) ([]hiveboard.Participant
 	}
 	return participants, nil
 }
-
-// func (s *EventService) GetEvents(url string) ([]hiveboard.Event, error) {
-// 	var events []hiveboard.Event
-
-// 	request, err := http.NewRequest("GET", url, nil)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	request.Header.Add("Authorization", "Bearer "+hiveboard.OauthToken.AccessToken)
-// 	client := &http.Client{}
-// 	response, err := client.Do(request)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	body, err := ioutil.ReadAll((response.Body))
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	err = json.Unmarshal(body, &events)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	return events, nil
-// }
