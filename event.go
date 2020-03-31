@@ -31,6 +31,8 @@ type Event struct {
 	ProhibitionOfCancellation int         `json:"prohibition_of_cancellation"`
 	CreatedAt                 time.Time   `json:"created_at"`
 	UpdatedAt                 time.Time   `json:"updated_at"`
+	Tags                      []string    `json:"tags"`
+	Groups                    []string    `json:"groups"`
 }
 
 type Participant struct {
