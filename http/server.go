@@ -38,7 +38,7 @@ func (s *Server) Open() error {
 	}
 	s.ln = ln
 	fmt.Println("Server running on: " + s.Addr)
-	http.Serve(s.ln, s.router())
+	go http.Serve(s.ln, s.router())
 	return nil
 }
 
@@ -66,7 +66,7 @@ func (s *Server) router() http.Handler {
 		r.Get("/login/", handleLogin)
 		r.Get("/callback/", handleCallback)
 		r.Mount("/api/events/", s.eventHandler())
-		r.Mount("/api/user", s.userHandler())
+		r.Mount("/api/user/", s.userHandler())
 	})
 	return r
 }
