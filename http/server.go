@@ -87,12 +87,12 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 
 func handleLogin(w http.ResponseWriter, r *http.Request) {
 	url := authorize.GetURL()
-	http.Redirect(w, r, url, http.StatusPermanentRedirect)
+	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 }
 
 func handleCallback(w http.ResponseWriter, r *http.Request) {
 	authorize.GetToken(r.FormValue("code"), r.FormValue("state"))
-	http.Redirect(w, r, "/api/events/", http.StatusPermanentRedirect)
+	http.Redirect(w, r, "/api/events/", http.StatusTemporaryRedirect)
 }
 
 // func Run() {
