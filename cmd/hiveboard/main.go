@@ -8,7 +8,9 @@ import (
 )
 
 func main() {
-	// http.Run()
+	// Add configuration stuff here, i.e params and flags
+	// or input from config files
+
 	if err := Run(); err != nil {
 		log.Fatal(err)
 	}
