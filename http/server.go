@@ -10,6 +10,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/nikunicke/hiveboard"
 	"github.com/nikunicke/hiveboard/authorize"
+	"github.com/rs/cors"
 )
 
 var baseURL = "https://api.intra.42.fr/v2/"
@@ -37,7 +38,6 @@ func (s *Server) Open() error {
 		return err
 	}
 	s.ln = ln
-	fmt.Println("Server running on: " + s.Addr)
 	go http.Serve(s.ln, s.router())
 	return nil
 }
@@ -61,6 +61,7 @@ func (s *Server) URL() url.URL {
 
 func (s *Server) router() http.Handler {
 	r := chi.NewRouter()
+	r.Use(cors.Default().Handler)
 	r.Route("/", func(r chi.Router) {
 		r.Get("/", handleIndex)
 		r.Get("/login/", handleLogin)
