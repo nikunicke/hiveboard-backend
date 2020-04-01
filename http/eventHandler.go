@@ -20,10 +20,9 @@ type eventHandler struct {
 func newEventHandler() *eventHandler {
 	h := &eventHandler{router: chi.NewRouter()}
 	h.router.Get("/", h.handleAllEvents)
-	h.router.Get("/{id}", h.handleEventByID)
-	h.router.Get("/{id}/users", h.handleEventParticipants)
-	h.router.Get("/users/{id}/events", h.handleGetUserEvents)
-
+	h.router.Get("/{eventID}", h.handleEventByID)
+	h.router.Get("/{eventID}/users", h.handleEventParticipants)
+	h.router.Get("/users/{userID}", h.handleGetUserEvents)
 	return h
 }
 
@@ -51,7 +50,7 @@ func (h *eventHandler) handleEventByID(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Not Authorized", 401)
 		return
 	}
-	eventID := chi.URLParam(r, "id")
+	eventID := chi.URLParam(r, "eventID")
 	event, err := h.eventService.GetEventByID(eventURL + "events/" + eventID)
 	if err != nil {
 		http.Error(w, "Internal Server Error", 500)
@@ -66,7 +65,7 @@ func (h *eventHandler) handleEventParticipants(w http.ResponseWriter, r *http.Re
 		http.Error(w, "Not Authorized", 401)
 		return
 	}
-	eventID := chi.URLParam(r, "id")
+	eventID := chi.URLParam(r, "eventID")
 	participants, err := h.eventService.GetEventParticipants(eventURL + "events/" + eventID + "/users")
 	if err != nil {
 		http.Error(w, "Internal Server Error", 500)
@@ -81,7 +80,7 @@ func (h *eventHandler) handleGetUserEvents(w http.ResponseWriter, r *http.Reques
 		http.Error(w, "Not Authorized", 401)
 		return
 	}
-	userID := chi.URLParam(r, "id") + "/"
+	userID := chi.URLParam(r, "userID") + "/"
 	events, err := h.eventService.GetUserEvents(eventURL + "users/" + userID + "events")
 	if err != nil {
 		http.Error(w, err.Error(), 500)
