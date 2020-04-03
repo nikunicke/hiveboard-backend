@@ -11,7 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
-var mongoURI = "mongodb+srv://npimenof:bllr54tGsFnbxPgJ@cluster0-z03gj.mongodb.net/test?retryWrites=true&w=majority"
+var mongoURI = "mongodb+srv://npimenof:PWD@cluster0-z03gj.mongodb.net/test?retryWrites=true&w=majority"
 
 type MongoDB struct {
 	db *mongo.Database
