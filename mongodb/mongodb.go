@@ -53,7 +53,7 @@ func (db *MongoDB) CheckConnection() error {
 
 // func Test() {
 // 	client, err := mongo.NewClient(options.Client().ApplyURI(
-// 		"mongodb+srv://npimenof:bllr54tGsFnbxPgJ@cluster0-z03gj.mongodb.net/test?retryWrites=true&w=majority",
+// 		"mongodb+srv://npimenof:PWD@cluster0-z03gj.mongodb.net/test?retryWrites=true&w=majority",
 // 	))
 // 	if err != nil {
 // 		log.Fatal(err)
