@@ -8,24 +8,27 @@ import (
 
 	"github.com/nikunicke/hiveboard/api42"
 	"github.com/nikunicke/hiveboard/http"
-	"github.com/nikunicke/hiveboard/mongodb"
 )
 
 func main() {
 	// Add configuration stuff here, i.e params and flags
 	// or input from config files
-	// mongodb.Test()
 	//testing mongo package
-	db := mongodb.NewMongoDB()
-	if err := db.Open("hiveboard"); err != nil {
-		log.Fatal(err)
-	}
-	if err := db.CheckConnection(); err != nil {
-		log.Fatal(err)
-	}
-	if err := db.PostTest("test"); err != nil {
-		log.Fatal(err)
-	}
+	// db := mongodb.NewMongoDB()
+	// if err := db.Open("hiveboard"); err != nil {
+	// 	log.Fatal(err)
+	// }
+	// if err := db.CheckConnection(); err != nil {
+	// 	log.Fatal(err)
+	// }
+	// fmt.Println("Connected to DB")
+
+	// if err := db.PostTest("events"); err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	// GET ALL TEST
+	// db.FindAll("events")
 	// ////////////////////////////////////////////
 
 	if err := Run(); err != nil {

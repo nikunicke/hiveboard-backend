@@ -25,10 +25,11 @@ func (s *EventService) GetEvents(url string) ([]hiveboard.Event, error) {
 	if err != nil {
 		return nil, err
 	}
-	body, err := ioutil.ReadAll((response.Body))
+	body, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		return nil, err
 	}
+	defer response.Body.Close()
 	if err = json.Unmarshal(body, &events); err != nil {
 		return nil, err
 	}
@@ -43,6 +44,10 @@ func (s *EventService) GetEventByID(url string) (*hiveboard.Event, error) {
 		return nil, err
 	}
 	body, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return nil, err
+	}
+	defer response.Body.Close()
 	if err = json.Unmarshal(body, &event); err != nil {
 		return nil, err
 	}
@@ -60,6 +65,7 @@ func (s *EventService) GetEventParticipants(url string) ([]hiveboard.Participant
 	if err != nil {
 		return nil, err
 	}
+	defer response.Body.Close()
 	if err = json.Unmarshal(body, &participants); err != nil {
 		return nil, err
 	}
@@ -84,6 +90,7 @@ func (s *EventService) GetUserEvents(url string) ([]hiveboard.Event, error) {
 	if body[0] != '[' {
 		return nil, hiveboard.UserNotFound
 	}
+	defer response.Body.Close()
 	if err = json.Unmarshal(body, &events); err != nil {
 		return nil, err
 	}

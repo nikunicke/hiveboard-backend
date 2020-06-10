@@ -1,6 +1,9 @@
 package hiveboard
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type EventService interface {
 	GetEvents(url string) ([]Event, error)
@@ -9,30 +12,53 @@ type EventService interface {
 	GetUserEvents(url string) ([]Event, error)
 }
 
+type EventMongo interface {
+	FindAll()
+}
+
+// lets try this
+
+type EventService2 struct {
+	api *EventService
+	db  *EventMongo
+}
+
+func NewE() *EventService2 {
+	return &EventService2{
+		api: nil,
+		db:  nil,
+	}
+}
+
+// type EventService2 interface {
+// 	EventMongo
+// 	EventService
+// }
+
 type Event struct {
-	ID             int       `json:"id"`
-	Name           string    `json:"name"`
-	Description    string    `json:"description"`
-	Location       string    `json:"location"`
-	Kind           string    `json:"kind"`
-	MaxPeople      int       `json:"max_people"`
-	NbrSubscribers int       `json:"nbr_subscribers"`
-	BeginAt        time.Time `json:"begin_at"`
-	EndAt          time.Time `json:"end_at"`
-	CampusIds      []int     `json:"campus_ids"`
-	CursusIds      []int     `json:"cursus_ids"`
+	ID             json.Number `bson:"_id,omitempty" json:"id"`
+	Name           string      `bson:"name" json:"name"`
+	Description    string      `bson:"description" json:"description"`
+	Location       string      `bson:"location" json:"location"`
+	Kind           string      `bson:"kind" json:"kind"`
+	MaxPeople      int         `bson:"max_people" json:"max_people"`
+	NbrSubscribers int         `bson:"nbr_subscribers" json:"nbr_subscribers"`
+	BeginAt        time.Time   `bson:"begin_at" json:"begin_at"`
+	EndAt          time.Time   `bson:"end_at" json:"end_at"`
+	CampusIds      []int       `bson:"campus_ids" json:"campus_ids"`
+	CursusIds      []int       `bson:"cursus_ids" json:"cursus_ids"`
 	Themes         []struct {
-		CreatedAt time.Time `json:"created_at"`
-		ID        int       `json:"id"`
-		Name      string    `json:"name"`
-		UpdatedAt time.Time `json:"updated_at"`
-	} `json:"themes"`
-	Waitlist                  interface{} `json:"waitlist"`
-	ProhibitionOfCancellation int         `json:"prohibition_of_cancellation"`
-	CreatedAt                 time.Time   `json:"created_at"`
-	UpdatedAt                 time.Time   `json:"updated_at"`
-	Tags                      []string    `json:"tags"`
-	Groups                    []string    `json:"groups"`
+		CreatedAt time.Time `bson:"created_at" json:"created_at"`
+		ID        int       `bson:"id" json:"id"`
+		Name      string    `bson:"name" json:"name"`
+		UpdatedAt time.Time `bson:"updated_at" json:"updated_at"`
+	} `bson:"themes" json:"themes"`
+	Waitlist                  interface{} `bson:"waitlist" json:"waitlist"`
+	ProhibitionOfCancellation int         `bson:"prohibition_of_cancellation" json:"prohibition_of_cancellation"`
+	CreatedAt                 time.Time   `bson:"created_at" json:"created_at"`
+	UpdatedAt                 time.Time   `bson:"updated_at" json:"updated_at"`
+	Tags                      []string    `bson:"tags" json:"tags"`
+	Groups                    []string    `bson:"groups" json:"groups"`
 }
 
 type Participant struct {

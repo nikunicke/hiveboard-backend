@@ -1,0 +1,26 @@
+{
+    "id": 4240,
+    "name": "La relation client (ou protocole de communication développeur-non développeur)",
+    "description": "En tant que développeurs, nous avons une idée précise de ce qu’il nous est possible de faire ou non, des fonctionnalités utiles ou superflues, de la manière la plus propre de faire du code et une interface utilisateur. Le client – qu’il s’agisse d’un client externe quand nous sommes prestataires, ou de notre patron – est souvent ignorant de l’informatique. Mais le pire qui puisse nous arriver, comme j’en ai fait l’expérience, est qu’il nous fasse confiance et ne s’occupe de rien. Car nous ne sommes pas à sa place et nous ne connaissons que mal ses contraintes, ses objectifs, ses méthodes de travail. Le risque est alors grand qu’on livre à la fin quelque chose qui ne lui convienne pas. Il en découle souvent des conflits inutiles et improductifs. Une bonne communication est donc essentielle. L’atelier a pour but de vous entraîner concrètement par des mises en situation pour trouver ensemble les réponses, les comportements les plus adaptés et les plus productifs, à la fois pour satisfaire le client, et pour valoriser notre travail. L’animateur: Laurent Quivogne. 25 ans de développement informatique, fondateur et dirigeant de plusieurs entreprises de développement, de service et d’édition logicielle. Aujourd’hui coach et facilitateur en entreprise.",
+    "location": "Lothlorien - Staff",
+    "kind": "workshop",
+    "max_people": 8,
+    "nbr_subscribers": 8,
+    "begin_at": "2020-06-23T15:00:00Z",
+    "end_at": "2020-06-23T17:00:00Z",
+    "campus_ids": [
+    1
+    ],
+    "cursus_ids": [
+    21,
+    1,
+    10
+    ],
+    "themes": [ ],
+    "waitlist": null,
+    "prohibition_of_cancellation": 24,
+    "created_at": "2020-02-24T15:59:38.551Z",
+    "updated_at": "2020-04-02T08:57:39.429Z",
+    "tags": null,
+    "groups": null
+    }

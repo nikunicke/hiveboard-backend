@@ -66,8 +66,8 @@ func (s *Server) router() http.Handler {
 		r.Get("/", handleIndex)
 		r.Get("/login/", handleLogin)
 		r.Get("/callback/", handleCallback)
-		r.Mount("/api/events/", s.eventHandler())
-		r.Mount("/api/user/", s.userHandler())
+		r.Mount("/api/events", s.eventHandler())
+		r.Mount("/api/user", s.userHandler())
 	})
 	return r
 }
