@@ -15,11 +15,14 @@ import (
 
 var baseURL = "https://api.intra.42.fr/v2/"
 
+// Server includes the services and some settings
 type Server struct {
 	ln net.Listener
 
 	EventService hiveboard.EventService
-	UserService  hiveboard.UserService
+	ES           hiveboard.EventService2
+
+	UserService hiveboard.UserService
 
 	Addr        string
 	Host        string
@@ -28,10 +31,12 @@ type Server struct {
 	LogOutput   io.Writer
 }
 
+// NewServer defines a new server with the Recoverable variable set as true
 func NewServer() *Server {
 	return &Server{Recoverable: true}
 }
 
+// Open opens a connection to the server
 func (s *Server) Open() error {
 	ln, err := net.Listen("tcp", s.Addr)
 	if err != nil {
@@ -42,6 +47,7 @@ func (s *Server) Open() error {
 	return nil
 }
 
+// Close takes down the server
 func (s *Server) Close() error {
 	if s.ln != nil {
 		s.ln.Close()

@@ -6,27 +6,28 @@ import (
 )
 
 type EventService interface {
-	GetEvents(url string) ([]Event, error)
+	Get42Events(url string) ([]Event, error)
+	// GetHBEvents(url string) ([]Event, error)
 	GetEventByID(url string) (*Event, error)
 	GetEventParticipants(url string) ([]Participant, error)
 	GetUserEvents(url string) ([]Event, error)
 }
 
 type EventMongo interface {
-	FindAll()
+	GetHBEvents(url string) ([]Event, error)
 }
 
 // lets try this
 
 type EventService2 struct {
-	api *EventService
-	db  *EventMongo
+	API42   EventService
+	Mongodb EventMongo
 }
 
 func NewE() *EventService2 {
 	return &EventService2{
-		api: nil,
-		db:  nil,
+		API42:   nil,
+		Mongodb: nil,
 	}
 }
 

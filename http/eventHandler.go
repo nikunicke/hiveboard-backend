@@ -12,9 +12,10 @@ import (
 const eventURL = "https://api.intra.42.fr/v2/"
 
 type eventHandler struct {
-	router       chi.Router
-	baseURL      url.URL
-	eventService hiveboard.EventService
+	router        chi.Router
+	baseURL       url.URL
+	eventService  hiveboard.EventService
+	eventService2 hiveboard.EventService2
 }
 
 func newEventHandler() *eventHandler {
@@ -37,11 +38,15 @@ func (h *eventHandler) handleAllEvents(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Not Authorized", 401)
 		return
 	}
-	events, err := h.eventService.GetEvents(eventURL + "events")
+	events, err := h.eventService.Get42Events(eventURL + "events")
 	if err != nil {
 		http.Error(w, "Internal Server Error", 500)
 		return
 	}
+
+	// api42test, err := h.eventService2.API42.Get42Events( ... )
+	// mongotest, err := h.eventService2.Mongodb.GetHBEvents( ... )
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(events)
 }

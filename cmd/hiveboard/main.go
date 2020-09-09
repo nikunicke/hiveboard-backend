@@ -6,8 +6,11 @@ import (
 	"os"
 	"os/signal"
 
+	"github.com/nikunicke/hiveboard"
+
 	"github.com/nikunicke/hiveboard/api42"
 	"github.com/nikunicke/hiveboard/http"
+	"github.com/nikunicke/hiveboard/mongodb"
 )
 
 func main() {
@@ -31,7 +34,7 @@ func main() {
 	// db.FindAll("events")
 	// ////////////////////////////////////////////
 
-	if err := Run(); err != nil {
+	if err := run(); err != nil {
 		log.Fatal(err)
 	}
 	c := make(chan os.Signal, 1)
@@ -40,9 +43,14 @@ func main() {
 	fmt.Println(" --> Program shutting down")
 }
 
-func Run() error {
+func run() error {
 	httpServer := http.NewServer()
 	httpServer.Addr = ":3000"
+
+	httpServer.ES = hiveboard.NewE()
+	httpServer.ES.API42 = api42.NewEventService()
+	httpServer.ES.Mongodb = mongodb.NewEventService()
+
 	httpServer.EventService = api42.NewEventService()
 	httpServer.UserService = api42.NewUserService()
 	err := httpServer.Open()

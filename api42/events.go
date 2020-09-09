@@ -19,7 +19,7 @@ func NewEventService() *EventService {
 	}
 }
 
-func (s *EventService) GetEvents(url string) ([]hiveboard.Event, error) {
+func (s *EventService) Get42Events(url string) ([]hiveboard.Event, error) {
 	var events []hiveboard.Event
 	response, err := hiveboard.Client.Get(url)
 	if err != nil {

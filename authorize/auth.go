@@ -8,10 +8,12 @@ import (
 	"golang.org/x/oauth2"
 )
 
+// Exceptions
 const (
 	ErrorState = hiveboard.Error("Invalid state value")
 )
 
+// GetURL configures Oauth2 and returns the AuthCodeURL string
 func GetURL() string {
 	hiveboard.OauthConf = &oauth2.Config{
 		ClientID:     os.Getenv("UID42"),
@@ -25,6 +27,7 @@ func GetURL() string {
 	return hiveboard.OauthConf.AuthCodeURL(hiveboard.OauthState)
 }
 
+// GetToken communicates with the AuthURL and exchanges our code with a token
 func GetToken(code string, state string) {
 	var err error
 	if state != hiveboard.OauthState {
