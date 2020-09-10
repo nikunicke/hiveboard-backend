@@ -1,29 +1,29 @@
 package hiveboard
 
 import (
-	"encoding/json"
 	"time"
 )
 
+// EventService ...
 type EventService interface {
-	Get42Events(url string) ([]Event, error)
-	// GetHBEvents(url string) ([]Event, error)
+	GetEvents(url string) ([]Event, error)
 	GetEventByID(url string) (*Event, error)
 	GetEventParticipants(url string) ([]Participant, error)
 	GetUserEvents(url string) ([]Event, error)
 }
 
+// EventMongo ...
 type EventMongo interface {
-	GetHBEvents(url string) ([]Event, error)
+	GetEvents() ([]Event, error)
 }
 
-// lets try this
-
+// EventService2 is meant to combine interfaces
 type EventService2 struct {
 	API42   EventService
 	Mongodb EventMongo
 }
 
+// NewE creates a new EventService2
 func NewE() *EventService2 {
 	return &EventService2{
 		API42:   nil,
@@ -31,13 +31,9 @@ func NewE() *EventService2 {
 	}
 }
 
-// type EventService2 interface {
-// 	EventMongo
-// 	EventService
-// }
-
+// Event ...
 type Event struct {
-	ID             json.Number `bson:"_id,omitempty" json:"id"`
+	ID             interface{} `bson:"_id,omitempty" json:"id,integer"`
 	Name           string      `bson:"name" json:"name"`
 	Description    string      `bson:"description" json:"description"`
 	Location       string      `bson:"location" json:"location"`
@@ -62,6 +58,7 @@ type Event struct {
 	Groups                    []string    `bson:"groups" json:"groups"`
 }
 
+// Participant ...
 type Participant struct {
 	ID    int    `json:"id"`
 	Login string `json:"login"`

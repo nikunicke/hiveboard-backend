@@ -19,8 +19,8 @@ var baseURL = "https://api.intra.42.fr/v2/"
 type Server struct {
 	ln net.Listener
 
-	EventService hiveboard.EventService
-	ES           hiveboard.EventService2
+	// EventService hiveboard.EventService
+	ES hiveboard.EventService2
 
 	UserService hiveboard.UserService
 
@@ -55,6 +55,7 @@ func (s *Server) Close() error {
 	return nil
 }
 
+// URL ...
 func (s *Server) URL() url.URL {
 	if s.ln == nil {
 		return url.URL{}
@@ -81,7 +82,7 @@ func (s *Server) router() http.Handler {
 func (s *Server) eventHandler() *eventHandler {
 	h := newEventHandler()
 	h.baseURL = s.URL()
-	h.eventService = s.EventService
+	h.eventService2 = s.ES
 	return h
 }
 

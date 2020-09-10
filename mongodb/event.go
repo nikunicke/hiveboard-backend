@@ -4,20 +4,23 @@ import (
 	"github.com/nikunicke/hiveboard"
 )
 
-type EventMongo struct {
-	events []hiveboard.Event
+// EventService represents a service to manage mongodb events
+type EventService struct {
+	db *MongoDB
 }
 
-var _ hiveboard.EventMongo = &EventMongo{}
+var _ hiveboard.EventMongo = &EventService{}
 
-func NewEventService() *EventMongo {
-	return &EventMongo{
-		events: nil,
+// NewEventService returns a new instance of EventService
+func NewEventService(db *MongoDB) *EventService {
+	return &EventService{
+		db: db,
 	}
 }
 
-func (em *EventMongo) GetHBEvents(url string) ([]hiveboard.Event, error) {
-	return nil, nil
+// GetEvents returns all events from the 'events' collection
+func (s *EventService) GetEvents() ([]hiveboard.Event, error) {
+	return s.db.FindAll("events")
 }
 
 // func (s *EventService) GetHBEvents(url string) ([]hiveboard.Event, error) {

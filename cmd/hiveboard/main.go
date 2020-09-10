@@ -47,11 +47,16 @@ func run() error {
 	httpServer := http.NewServer()
 	httpServer.Addr = ":3000"
 
-	httpServer.ES = hiveboard.NewE()
-	httpServer.ES.API42 = api42.NewEventService()
-	httpServer.ES.Mongodb = mongodb.NewEventService()
+	db := mongodb.NewMongoDB()
+	if err := db.Open("hiveboard"); err != nil {
+		log.Fatal(err)
+	}
 
-	httpServer.EventService = api42.NewEventService()
+	httpServer.ES = *hiveboard.NewE()
+	httpServer.ES.API42 = api42.NewEventService()
+	httpServer.ES.Mongodb = mongodb.NewEventService(db)
+
+	// httpServer.EventService = api42.NewEventService()
 	httpServer.UserService = api42.NewUserService()
 	err := httpServer.Open()
 	if err != nil {

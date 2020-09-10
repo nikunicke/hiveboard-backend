@@ -2,6 +2,7 @@ package http
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"net/url"
 
@@ -20,7 +21,7 @@ type eventHandler struct {
 
 func newEventHandler() *eventHandler {
 	h := &eventHandler{router: chi.NewRouter()}
-	h.router.Get("/", h.handleAllEvents)
+	h.router.Get("/", h.getAll)
 	h.router.Get("/{eventID}", h.handleEventByID)
 	h.router.Get("/{eventID}/users", h.handleEventParticipants)
 	h.router.Get("/users/{userID}", h.handleGetUserEvents)
@@ -33,22 +34,21 @@ func (h *eventHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	h.router.ServeHTTP(w, r)
 }
 
-func (h *eventHandler) handleAllEvents(w http.ResponseWriter, r *http.Request) {
+func (h *eventHandler) getAll(w http.ResponseWriter, r *http.Request) {
 	if hiveboard.Client == nil {
 		http.Error(w, "Not Authorized", 401)
 		return
 	}
-	events, err := h.eventService.Get42Events(eventURL + "events")
+	API42Events, _ := h.eventService2.API42.GetEvents(eventURL + "events")
+	hiveboardEvents, err := h.eventService2.Mongodb.GetEvents()
 	if err != nil {
+		log.Println(err)
 		http.Error(w, "Internal Server Error", 500)
-		return
 	}
-
-	// api42test, err := h.eventService2.API42.Get42Events( ... )
-	// mongotest, err := h.eventService2.Mongodb.GetHBEvents( ... )
+	allEvents := append(API42Events, hiveboardEvents...)
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(events)
+	json.NewEncoder(w).Encode(allEvents)
 }
 
 func (h *eventHandler) handleEventByID(w http.ResponseWriter, r *http.Request) {

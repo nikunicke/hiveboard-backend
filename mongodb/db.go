@@ -3,7 +3,6 @@ package mongodb
 import (
 	"context"
 	"fmt"
-	"log"
 	"os"
 	"time"
 
@@ -16,14 +15,17 @@ import (
 
 var mongoURI = os.Getenv("MONGODB")
 
+// MongoDB ...
 type MongoDB struct {
 	db *mongo.Database
 }
 
+// NewMongoDB ...
 func NewMongoDB() *MongoDB {
 	return &MongoDB{}
 }
 
+// Open ...
 func (db *MongoDB) Open(name string) error {
 	client, err := mongo.NewClient(options.Client().ApplyURI(mongoURI))
 	if err != nil {
@@ -36,9 +38,10 @@ func (db *MongoDB) Open(name string) error {
 	return nil
 }
 
+// PostTest ...
 func (db *MongoDB) PostTest(collection string) error {
 	item := hiveboard.Event{}
-	item.Name = "Thruster"
+	item.Name = "HIVEBOARD TEST 2"
 	col := db.db.Collection(collection)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -50,21 +53,24 @@ func (db *MongoDB) PostTest(collection string) error {
 	return nil
 }
 
-func (db *MongoDB) FindAll(collection string) {
-	var results []bson.M
+// FindAll ...
+func (db *MongoDB) FindAll(collection string) ([]hiveboard.Event, error) {
+	var results []hiveboard.Event
 
 	cursor, err := db.db.Collection(collection).Find(context.TODO(), bson.D{})
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 	if err = cursor.All(context.TODO(), &results); err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
-	for _, result := range results {
-		fmt.Println(result)
-	}
+	// for _, result := range results {
+	// 	fmt.Println(result)
+	// }
+	return results, nil
 }
 
+// CheckConnection ...
 func (db *MongoDB) CheckConnection() error {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
