@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"strconv"
 
 	"github.com/go-chi/chi"
 	"github.com/nikunicke/hiveboard"
@@ -22,7 +23,7 @@ type eventHandler struct {
 func newEventHandler() *eventHandler {
 	h := &eventHandler{router: chi.NewRouter()}
 	h.router.Get("/", h.getAll)
-	h.router.Get("/{eventID}", h.handleEventByID)
+	h.router.Get("/{eventID}", h.getEventByID)
 	h.router.Get("/{eventID}/users", h.handleEventParticipants)
 	h.router.Get("/users/{userID}", h.handleGetUserEvents)
 	// h.router.Get("/eventsusers", h.getEventsUsers)
@@ -50,15 +51,22 @@ func (h *eventHandler) getAll(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(allEvents)
 }
 
-func (h *eventHandler) handleEventByID(w http.ResponseWriter, r *http.Request) {
+func (h *eventHandler) getEventByID(w http.ResponseWriter, r *http.Request) {
+	var err error
+	var event *hiveboard.Event
+
 	if hiveboard.Client == nil {
 		http.Error(w, "Not Authorized", 401)
 		return
 	}
 	eventID := chi.URLParam(r, "eventID")
-	event, err := h.eventService.GetEventByID(eventURL + "events/" + eventID)
+	if isNumeric(eventID) {
+		event, err = h.eventService2.API42.GetEventByID(eventURL + "events/" + eventID)
+	} else {
+		event, err = h.eventService2.Mongodb.GetEventByID(eventID)
+	}
 	if err != nil {
-		http.Error(w, "Internal Server Error", 500)
+		http.Error(w, err.Error(), 404)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
@@ -127,3 +135,8 @@ func (h *eventHandler) handleGetUserEvents(w http.ResponseWriter, r *http.Reques
 // 	body, err := ioutil.ReadAll(response.Body)
 // 	fmt.Fprintf(w, "%s\n", string(body))
 // }
+
+func isNumeric(s string) bool {
+	_, err := strconv.ParseInt(s, 10, 64)
+	return err == nil
+}
