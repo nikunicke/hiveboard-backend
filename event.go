@@ -56,6 +56,7 @@ type Event struct {
 	UpdatedAt                 time.Time   `bson:"updated_at" json:"updated_at"`
 	Tags                      []string    `bson:"tags" json:"tags"`
 	Groups                    []string    `bson:"groups" json:"groups"`
+	Hiveboard                 bool        `bson:"hiveboard" json:"hiveboard"`
 }
 
 // Participant ...

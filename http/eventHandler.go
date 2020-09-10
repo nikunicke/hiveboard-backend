@@ -39,14 +39,13 @@ func (h *eventHandler) getAll(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Not Authorized", 401)
 		return
 	}
-	API42Events, _ := h.eventService2.API42.GetEvents(eventURL + "events")
+	API42Events, err := h.eventService2.API42.GetEvents(eventURL + "events")
 	hiveboardEvents, err := h.eventService2.Mongodb.GetEvents()
 	if err != nil {
 		log.Println(err)
 		http.Error(w, "Internal Server Error", 500)
 	}
 	allEvents := append(API42Events, hiveboardEvents...)
-
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(allEvents)
 }

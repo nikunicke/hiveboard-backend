@@ -1,7 +1,10 @@
 package mongodb
 
 import (
+	"context"
+
 	"github.com/nikunicke/hiveboard"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 // EventService represents a service to manage mongodb events
@@ -20,7 +23,7 @@ func NewEventService(db *MongoDB) *EventService {
 
 // GetEvents returns all events from the 'events' collection
 func (s *EventService) GetEvents() ([]hiveboard.Event, error) {
-	return s.db.FindAll("events")
+	return s.db.findAll("events")
 }
 
 // func (s *EventService) GetHBEvents(url string) ([]hiveboard.Event, error) {
@@ -39,3 +42,17 @@ func (s *EventService) GetEvents() ([]hiveboard.Event, error) {
 // func (s *EventService) GetUserEvents(url string) ([]hiveboard.Event, error) {
 // 	return nil, nil
 // }
+
+// FindAll ...
+func (db *MongoDB) findAll(collection string) ([]hiveboard.Event, error) {
+	var results []hiveboard.Event
+
+	cursor, err := db.db.Collection(collection).Find(context.TODO(), bson.D{})
+	if err != nil {
+		return nil, err
+	}
+	if err = cursor.All(context.TODO(), &results); err != nil {
+		return nil, err
+	}
+	return results, nil
+}

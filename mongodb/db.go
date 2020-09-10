@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/nikunicke/hiveboard"
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -51,23 +50,6 @@ func (db *MongoDB) PostTest(collection string) error {
 	}
 	fmt.Println(res)
 	return nil
-}
-
-// FindAll ...
-func (db *MongoDB) FindAll(collection string) ([]hiveboard.Event, error) {
-	var results []hiveboard.Event
-
-	cursor, err := db.db.Collection(collection).Find(context.TODO(), bson.D{})
-	if err != nil {
-		return nil, err
-	}
-	if err = cursor.All(context.TODO(), &results); err != nil {
-		return nil, err
-	}
-	// for _, result := range results {
-	// 	fmt.Println(result)
-	// }
-	return results, nil
 }
 
 // CheckConnection ...
