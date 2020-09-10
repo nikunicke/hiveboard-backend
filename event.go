@@ -12,7 +12,8 @@ type EventService interface {
 	GetUserEvents(url string) ([]Event, error)
 }
 
-// EventMongo ...
+// EventMongo ... This can be removed. We can use the same interface as above.
+// Just need to add EventParticipant and UserEvents features for our own data
 type EventMongo interface {
 	GetEvents() ([]Event, error)
 	GetEventByID(id string) (*Event, error)
