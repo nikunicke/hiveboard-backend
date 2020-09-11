@@ -69,6 +69,10 @@ func (h *eventHandler) getEventByID(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 404)
 		return
 	}
+	if event == nil {
+		http.Error(w, "Event not found", 404)
+		return
+	}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(event)
 }
