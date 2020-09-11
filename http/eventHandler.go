@@ -40,8 +40,6 @@ func (h *eventHandler) getAll(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Not Authorized", 401)
 		return
 	}
-	// All events: eventURL + "events"
-	// Campus events: /v2/campus/:campus_id/events...
 	API42Events, err := h.eventService2.API42.GetEvents("https://api.intra.42.fr/v2/campus/13/" + "events")
 	hiveboardEvents, err := h.eventService2.Mongodb.GetEvents()
 	if err != nil {

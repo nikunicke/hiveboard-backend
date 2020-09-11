@@ -3,6 +3,7 @@ package api42
 import (
 	"encoding/json"
 	"io/ioutil"
+	"time"
 
 	"github.com/nikunicke/hiveboard"
 )
@@ -21,7 +22,9 @@ func NewEventService() *EventService {
 
 func (s *EventService) GetEvents(url string) ([]hiveboard.Event, error) {
 	var events []hiveboard.Event
-	response, err := hiveboard.Client.Get(url)
+	beginAt := time.Now().Format("2006-01-02T15:04:05.000Z")
+	endAt := time.Now().AddDate(1, 0, 0).Format("2006-01-02T15:04:05.000Z")
+	response, err := hiveboard.Client.Get(url + "?range[begin_at]=" + beginAt + "," + endAt)
 	if err != nil {
 		return nil, err
 	}
