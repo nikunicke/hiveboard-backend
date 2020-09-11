@@ -2,6 +2,7 @@ package mongodb
 
 import (
 	"context"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
@@ -58,7 +59,8 @@ func (s *EventService) GetEventByID(id string) (*hiveboard.Event, error) {
 func (db *MongoDB) findAll(collection string) ([]hiveboard.Event, error) {
 	var results []hiveboard.Event
 
-	cursor, err := db.db.Collection(collection).Find(context.TODO(), bson.D{})
+	fromDate := time.Now()
+	cursor, err := db.db.Collection(collection).Find(context.TODO(), bson.M{"begin_at": bson.M{"$gt": fromDate}})
 	if err != nil {
 		return nil, err
 	}
