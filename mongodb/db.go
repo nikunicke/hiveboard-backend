@@ -40,8 +40,9 @@ func (db *MongoDB) Open(name string) error {
 // PostTest ...
 func (db *MongoDB) PostTest(collection string) error {
 	item := hiveboard.Event{}
-	item.Name = "HIVEBOARD TEST 3"
+	item.Name = "HIVEBOARD TEST 4"
 	item.Hiveboard = true
+	item.BeginAt = time.Now().AddDate(0, 0, 1)
 	col := db.db.Collection(collection)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()

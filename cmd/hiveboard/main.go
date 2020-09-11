@@ -52,6 +52,8 @@ func run() error {
 		log.Fatal(err)
 	}
 
+	// db.PostTest("events")
+
 	httpServer.ES = *hiveboard.NewE()
 	httpServer.ES.API42 = api42.NewEventService()
 	httpServer.ES.Mongodb = mongodb.NewEventService(db)
