@@ -33,6 +33,12 @@ func NewE() *EventService2 {
 	}
 }
 
+type Wrapper struct {
+	API42Error   string  `json:"api42error"`
+	Mongo42Error string  `json:"mongo42error"`
+	Data         []Event `json:"data"`
+}
+
 // Event ...
 type Event struct {
 	ID             interface{} `bson:"_id,omitempty" json:"id,integer"`

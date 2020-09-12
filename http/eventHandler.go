@@ -2,7 +2,6 @@ package http
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -36,19 +35,26 @@ func (h *eventHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *eventHandler) getAll(w http.ResponseWriter, r *http.Request) {
+	var events hiveboard.Wrapper
+
 	if hiveboard.Client == nil {
 		http.Error(w, "Not Authorized", 401)
 		return
 	}
 	API42Events, err := h.eventService2.API42.GetEvents("https://api.intra.42.fr/v2/campus/13/" + "events")
+	if err != nil {
+		events.API42Error = err.Error()
+	}
 	hiveboardEvents, err := h.eventService2.Mongodb.GetEvents()
 	if err != nil {
-		log.Println(err)
-		http.Error(w, "Internal Server Error", 500)
+		events.Mongo42Error = err.Error()
 	}
-	allEvents := append(API42Events, hiveboardEvents...)
+	if events.API42Error != "" && events.Mongo42Error != "" {
+		http.Error(w, "Internal server error", 500)
+	}
+	events.Data = append(API42Events, hiveboardEvents...)
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(allEvents)
+	json.NewEncoder(w).Encode(events)
 }
 
 func (h *eventHandler) getEventByID(w http.ResponseWriter, r *http.Request) {
