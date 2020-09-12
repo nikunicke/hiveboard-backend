@@ -2,6 +2,7 @@ package http
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -26,7 +27,7 @@ func newEventHandler() *eventHandler {
 	h.router.Get("/{eventID}/users", h.handleEventParticipants)
 	h.router.Get("/users/{userID}", h.handleGetUserEvents)
 	// h.router.Get("/eventsusers", h.getEventsUsers)
-	// h.router.Post("/", h.handleSub)
+	h.router.Post("/", h.postEvent)
 	return h
 }
 
@@ -111,6 +112,16 @@ func (h *eventHandler) handleGetUserEvents(w http.ResponseWriter, r *http.Reques
 	}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(events)
+}
+
+func (h *eventHandler) postEvent(w http.ResponseWriter, r *http.Request) {
+	res, err := h.eventService2.Mongodb.PostEvent()
+	if err != nil {
+		http.Error(w, "PostEvent failed", 500)
+	}
+	fmt.Println(res)
+	w.Header().Set("Content-Type", "text/plain")
+	json.NewEncoder(w).Encode(res)
 }
 
 // func (h *eventHandler) handleSub(w http.ResponseWriter, r *http.Request) {

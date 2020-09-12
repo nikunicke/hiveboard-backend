@@ -17,6 +17,7 @@ type EventService interface {
 type EventMongo interface {
 	GetEvents() ([]Event, error)
 	GetEventByID(id string) (*Event, error)
+	PostEvent() (string, error)
 }
 
 // EventService2 is meant to combine interfaces

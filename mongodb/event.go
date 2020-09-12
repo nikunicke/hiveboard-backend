@@ -34,6 +34,11 @@ func (s *EventService) GetEventByID(id string) (*hiveboard.Event, error) {
 	return s.db.findByID("events", id)
 }
 
+// Post event (hardcoded)
+func (s *EventService) PostEvent() (string, error) {
+	return s.db.insertEvent("events")
+}
+
 // func (s *EventService) PostEvent() error {
 
 // }
@@ -81,4 +86,21 @@ func (db *MongoDB) findByID(collection string, id string) (*hiveboard.Event, err
 	result := db.db.Collection(collection).FindOne(context.Background(), bson.M{"_id": objectID})
 	result.Decode(&event)
 	return event, nil
+}
+
+// insertEvent
+
+func (db *MongoDB) insertEvent(collection string) (string, error) {
+	item := hiveboard.Event{}
+	item.Name = "Hardcoded event"
+	item.Hiveboard = true
+	item.BeginAt = time.Now().AddDate(0, 0, 2)
+	col := db.db.Collection(collection)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	res, err := col.InsertOne(ctx, item)
+	if err != nil {
+		return "", err
+	}
+	return res.InsertedID.(primitive.ObjectID).Hex(), nil
 }
