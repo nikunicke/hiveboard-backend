@@ -2,6 +2,7 @@ package mongodb
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -100,7 +101,9 @@ func (db *MongoDB) insertEvent(collection string) (string, error) {
 	defer cancel()
 	res, err := col.InsertOne(ctx, item)
 	if err != nil {
+		fmt.Println(err)
 		return "", err
 	}
+	fmt.Println(res)
 	return res.InsertedID.(primitive.ObjectID).Hex(), nil
 }
