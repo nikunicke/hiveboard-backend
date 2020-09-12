@@ -119,9 +119,7 @@ func (h *eventHandler) postEvent(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, "PostEvent failed", 500)
 	}
-	fmt.Println(res)
-	w.Header().Set("Content-Type", "text/plain")
-	json.NewEncoder(w).Encode(res)
+	fmt.Fprintf(w, res)
 }
 
 // func (h *eventHandler) handleSub(w http.ResponseWriter, r *http.Request) {
