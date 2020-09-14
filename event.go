@@ -17,7 +17,7 @@ type EventService interface {
 type EventMongo interface {
 	GetEvents() ([]Event, error)
 	GetEventByID(id string) (*Event, error)
-	PostEvent() (string, error)
+	PostEvent(event Event) (*Event, error)
 }
 
 // EventService2 is meant to combine interfaces
@@ -43,14 +43,14 @@ type Wrapper struct {
 // Event ...
 type Event struct {
 	ID             interface{} `bson:"_id,omitempty" json:"id,integer"`
-	Name           string      `bson:"name" json:"name"`
-	Description    string      `bson:"description" json:"description"`
-	Location       string      `bson:"location" json:"location"`
+	Name           string      `bson:"name" json:"name" validate:"required,min=5,max=200"`
+	Description    string      `bson:"description" json:"description" validate:"required,min=5,max=2000"`
+	Location       string      `bson:"location" json:"location" validate:"required"`
 	Kind           string      `bson:"kind" json:"kind"`
 	MaxPeople      int         `bson:"max_people" json:"max_people"`
 	NbrSubscribers int         `bson:"nbr_subscribers" json:"nbr_subscribers"`
-	BeginAt        time.Time   `bson:"begin_at" json:"begin_at"`
-	EndAt          time.Time   `bson:"end_at" json:"end_at"`
+	BeginAt        time.Time   `bson:"begin_at" json:"begin_at" validate:"required,gtfield=CreatedAt,ltfield=EndAt"`
+	EndAt          time.Time   `bson:"end_at" json:"end_at" validate:"required,gtfield=BeginAt"`
 	CampusIds      []int       `bson:"campus_ids" json:"campus_ids"`
 	CursusIds      []int       `bson:"cursus_ids" json:"cursus_ids"`
 	Themes         []struct {

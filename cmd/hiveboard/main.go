@@ -52,7 +52,10 @@ func run() error {
 		log.Fatal(err)
 	}
 
-	// db.PostTest("events")
+	test := db.CheckConnection()
+	if test != nil {
+		log.Fatal(test)
+	}
 
 	httpServer.ES = *hiveboard.NewE()
 	httpServer.ES.API42 = api42.NewEventService()

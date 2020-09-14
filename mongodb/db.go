@@ -2,11 +2,9 @@ package mongodb
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"time"
 
-	"github.com/nikunicke/hiveboard"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -38,21 +36,21 @@ func (db *MongoDB) Open(name string) error {
 }
 
 // PostTest ...
-func (db *MongoDB) PostTest(collection string) error {
-	item := hiveboard.Event{}
-	item.Name = "HIVEBOARD TEST 4"
-	item.Hiveboard = true
-	item.BeginAt = time.Now().AddDate(0, 0, 1)
-	col := db.db.Collection(collection)
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-	res, err := col.InsertOne(ctx, item)
-	if err != nil {
-		return err
-	}
-	fmt.Println(res)
-	return nil
-}
+// func (db *MongoDB) PostTest(collection string) error {
+// 	item := hiveboard.Event{}
+// 	item.Name = "HIVEBOARD TEST 4"
+// 	item.Hiveboard = true
+// 	item.BeginAt = time.Now().AddDate(0, 0, 1)
+// 	col := db.db.Collection(collection)
+// 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+// 	defer cancel()
+// 	res, err := col.InsertOne(ctx, item)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	fmt.Println(res)
+// 	return nil
+// }
 
 // CheckConnection ...
 func (db *MongoDB) CheckConnection() error {

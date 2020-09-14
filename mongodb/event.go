@@ -2,13 +2,14 @@ package mongodb
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
-	"go.mongodb.org/mongo-driver/bson/primitive"
-
+	"github.com/go-playground/validator/v10"
 	"github.com/nikunicke/hiveboard"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // EventService represents a service to manage mongodb events
@@ -35,9 +36,23 @@ func (s *EventService) GetEventByID(id string) (*hiveboard.Event, error) {
 	return s.db.findByID("events", id)
 }
 
-// Post event (hardcoded)
-func (s *EventService) PostEvent() (string, error) {
-	return s.db.insertEvent("events")
+// PostEvent ...
+func (s *EventService) PostEvent(event hiveboard.Event) (*hiveboard.Event, error) {
+	presentTime := time.Now()
+	event.CreatedAt = presentTime
+	event.UpdatedAt = presentTime
+	if event.ID != nil {
+		return nil, errors.New("ID should not be defined")
+	}
+	v := validator.New()
+	err := v.Struct(event)
+	if err != nil {
+		for _, e := range err.(validator.ValidationErrors) {
+			fmt.Println(e)
+		}
+		return nil, errors.New("Event validation failed")
+	}
+	return s.db.insertEvent(&event, "events")
 }
 
 // func (s *EventService) PostEvent() error {
@@ -91,19 +106,18 @@ func (db *MongoDB) findByID(collection string, id string) (*hiveboard.Event, err
 
 // insertEvent
 
-func (db *MongoDB) insertEvent(collection string) (string, error) {
-	item := hiveboard.Event{}
-	item.Name = "Hardcoded event"
-	item.Hiveboard = true
-	item.BeginAt = time.Now().AddDate(0, 0, 2)
+func (db *MongoDB) insertEvent(data *hiveboard.Event, collection string) (*hiveboard.Event, error) {
 	col := db.db.Collection(collection)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	res, err := col.InsertOne(ctx, item)
+	res, err := col.InsertOne(ctx, data)
 	if err != nil {
-		fmt.Println(err)
-		return "", err
+		return nil, err
 	}
-	fmt.Println(res)
-	return res.InsertedID.(primitive.ObjectID).Hex(), nil
+	data.ID = res.InsertedID.(primitive.ObjectID).Hex()
+	return data, nil
+}
+
+func ReturnTwo() int {
+	return 2
 }

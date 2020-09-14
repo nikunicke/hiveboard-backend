@@ -2,7 +2,6 @@ package http
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -115,11 +114,21 @@ func (h *eventHandler) handleGetUserEvents(w http.ResponseWriter, r *http.Reques
 }
 
 func (h *eventHandler) postEvent(w http.ResponseWriter, r *http.Request) {
-	res, err := h.eventService2.Mongodb.PostEvent()
+	var newEvent hiveboard.Event
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&newEvent)
 	if err != nil {
-		http.Error(w, "PostEvent failed", 500)
+		http.Error(w, err.Error(), 500)
+		return
 	}
-	fmt.Fprintf(w, res)
+	res, err := h.eventService2.Mongodb.PostEvent(newEvent)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(201)
+	json.NewEncoder(w).Encode(res)
 }
 
 // func (h *eventHandler) handleSub(w http.ResponseWriter, r *http.Request) {
