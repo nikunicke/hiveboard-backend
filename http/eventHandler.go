@@ -115,6 +115,9 @@ func (h *eventHandler) handleGetUserEvents(w http.ResponseWriter, r *http.Reques
 
 func (h *eventHandler) postEvent(w http.ResponseWriter, r *http.Request) {
 	var newEvent hiveboard.Event
+	if hiveboard.Client == nil {
+		http.Error(w, "Not Authorized", 401)
+	}
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&newEvent)
 	if err != nil {
