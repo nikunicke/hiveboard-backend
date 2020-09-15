@@ -1,7 +1,6 @@
 package authorize
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -39,8 +38,4 @@ func GetToken(code string, state string) {
 		log.Fatal(err)
 	}
 	hiveboard.Client = hiveboard.OauthConf.Client(oauth2.NoContext, hiveboard.OauthToken)
-	fmt.Println("AccessToken:", hiveboard.OauthToken.AccessToken)
-	fmt.Println("Expiry:", hiveboard.OauthToken.Expiry)
-	fmt.Println("RefreshToken:", hiveboard.OauthToken.RefreshToken)
-	fmt.Println("TokenType:", hiveboard.OauthToken.TokenType)
 }

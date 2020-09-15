@@ -109,6 +109,5 @@ func handleLogin(w http.ResponseWriter, r *http.Request) {
 
 func handleCallback(w http.ResponseWriter, r *http.Request) {
 	authorize.GetToken(r.FormValue("code"), r.FormValue("state"))
-	// fmt.Println(hiveboard.OauthToken)
 	http.Redirect(w, r, "/api/events/", http.StatusTemporaryRedirect)
 }
