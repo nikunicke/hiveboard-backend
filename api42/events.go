@@ -57,8 +57,8 @@ func (s *EventService) GetEventByID(url string) (*hiveboard.Event, error) {
 	return event, nil
 }
 
-func (s *EventService) GetEventParticipants(url string) ([]hiveboard.Participant, error) {
-	var participants []hiveboard.Participant
+func (s *EventService) GetEventUsers(url string) ([]hiveboard.EventUser, error) {
+	var participants []hiveboard.EventUser
 
 	response, err := hiveboard.Client.Get(url)
 	if err != nil {
@@ -76,9 +76,9 @@ func (s *EventService) GetEventParticipants(url string) ([]hiveboard.Participant
 }
 
 // Think about moving the below method to the userHandler. Right now the url path
-// gets a little bit messy --> domain/events/users/:user_id/events
+// gets a liqttle bit messy --> domain/events/users/:user_id/events
 
-// domain/users/:user_id/events would work better
+// GetUserEvents domain/users/:user_id/events would work better
 // check that ot works with the user bolt package
 func (s *EventService) GetUserEvents(url string) ([]hiveboard.Event, error) {
 	var events []hiveboard.Event

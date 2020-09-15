@@ -23,7 +23,7 @@ func newEventHandler() *eventHandler {
 	h := &eventHandler{router: chi.NewRouter()}
 	h.router.Get("/", h.getAll)
 	h.router.Get("/{eventID}", h.getEventByID)
-	h.router.Get("/{eventID}/users", h.handleEventParticipants)
+	h.router.Get("/{eventID}/users", h.handleGetEventUsers)
 	h.router.Get("/users/{userID}", h.handleGetUserEvents)
 	// h.router.Get("/eventsusers", h.getEventsUsers)
 	h.router.Post("/", h.postEvent)
@@ -35,7 +35,7 @@ func (h *eventHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *eventHandler) getAll(w http.ResponseWriter, r *http.Request) {
-	var events hiveboard.Wrapper
+	var events hiveboard.EventWrapper
 
 	if hiveboard.Client == nil {
 		http.Error(w, "Not Authorized", 401)
@@ -83,19 +83,26 @@ func (h *eventHandler) getEventByID(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(event)
 }
 
-func (h *eventHandler) handleEventParticipants(w http.ResponseWriter, r *http.Request) {
+func (h *eventHandler) handleGetEventUsers(w http.ResponseWriter, r *http.Request) {
+	var err error
+	var eventUsers []hiveboard.EventUser
 	if hiveboard.Client == nil {
 		http.Error(w, "Not Authorized", 401)
 		return
 	}
 	eventID := chi.URLParam(r, "eventID")
-	participants, err := h.eventService.GetEventParticipants(eventURL + "events/" + eventID + "/users")
+	if isNumeric(eventID) {
+		suffix := "events/" + eventID + "/users"
+		eventUsers, err = h.eventService2.API42.GetEventUsers(eventURL + suffix)
+	} else {
+		http.Error(w, "Our API does not support this feature yet", 500)
+	}
 	if err != nil {
 		http.Error(w, "Internal Server Error", 500)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(participants)
+	json.NewEncoder(w).Encode(eventUsers)
 }
 
 func (h *eventHandler) handleGetUserEvents(w http.ResponseWriter, r *http.Request) {

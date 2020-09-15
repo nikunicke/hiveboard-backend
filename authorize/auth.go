@@ -1,6 +1,8 @@
 package authorize
 
 import (
+	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 
@@ -38,4 +40,11 @@ func GetToken(code string, state string) {
 		log.Fatal(err)
 	}
 	hiveboard.Client = hiveboard.OauthConf.Client(oauth2.NoContext, hiveboard.OauthToken)
+	// This should be saved somewhere. No need to get the full username and stuff...
+	res, err := hiveboard.Client.Get("https://api.intra.42.fr/oauth/token/info")
+	if err != nil {
+		fmt.Println(err)
+	}
+	bod, _ := ioutil.ReadAll(res.Body)
+	fmt.Println(string(bod))
 }

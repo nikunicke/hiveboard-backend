@@ -8,7 +8,7 @@ import (
 type EventService interface {
 	GetEvents(url string) ([]Event, error)
 	GetEventByID(url string) (*Event, error)
-	GetEventParticipants(url string) ([]Participant, error)
+	GetEventUsers(url string) ([]EventUser, error)
 	GetUserEvents(url string) ([]Event, error)
 }
 
@@ -34,13 +34,14 @@ func NewE() *EventService2 {
 	}
 }
 
-type Wrapper struct {
+// EventWrapper contains errors and the combined data from the 42API and our own
+type EventWrapper struct {
 	API42Error   string  `json:"api42error"`
 	Mongo42Error string  `json:"mongo42error"`
 	Data         []Event `json:"data"`
 }
 
-// Event ...
+// Event represents an event
 type Event struct {
 	ID             interface{} `bson:"_id,omitempty" json:"id,integer"`
 	Name           string      `bson:"name" json:"name" validate:"required,min=5,max=200"`
@@ -68,9 +69,9 @@ type Event struct {
 	Hiveboard                 bool        `bson:"hiveboard" json:"hiveboard"`
 }
 
-// Participant ...
-type Participant struct {
-	ID    int    `json:"id"`
-	Login string `json:"login"`
-	URL   string `json:"url"`
+// EventUser represents a participant to an event
+type EventUser struct {
+	ID    interface{} `bson:"_id" json:"id"`
+	Login string      `bson:"login" json:"login"`
+	URL   string      `bson:"url" json:"url"`
 }
