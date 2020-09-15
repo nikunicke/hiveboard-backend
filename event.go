@@ -69,6 +69,12 @@ type Event struct {
 	Hiveboard                 bool        `bson:"hiveboard" json:"hiveboard"`
 }
 
+// EventUserWrapper for mongoDB
+type EventUserWrapper struct {
+	ID         interface{} `bson:"_id"`
+	EventUsers []EventUser `bson:"event_users"`
+}
+
 // EventUser represents a participant to an event
 type EventUser struct {
 	ID    interface{} `bson:"_id" json:"id"`

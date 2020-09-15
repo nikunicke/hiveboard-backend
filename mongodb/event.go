@@ -118,6 +118,10 @@ func (db *MongoDB) insertEvent(data *hiveboard.Event, collection string) (*hiveb
 	return data, nil
 }
 
+func (db *MongoDB) insertEventUser(ID hiveboard.Event) error {
+	return nil
+}
+
 func ReturnTwo() int {
 	return 2
 }
