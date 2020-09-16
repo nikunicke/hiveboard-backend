@@ -1,0 +1,33 @@
+POST http://localhost:3000/api/events
+Content-Type: application/json
+
+{
+"name": "HIVEBOARD TEST 4",
+"description": "best test ever",
+"location": "Helsinki",
+"kind": "",
+"max_people": 0,
+"nbr_subscribers": 0,
+"begin_at": "2020-09-20T07:33:45.451Z",
+"end_at": "2020-09-21T00:00:00Z",
+"campus_ids": null,
+"cursus_ids": null,
+"themes": null,
+"waitlist": null,
+"prohibition_of_cancellation": 0,
+"created_at": "0001-01-01T00:00:00Z",
+"updated_at": "0001-01-01T00:00:00Z",
+"event_user": [
+        {
+        "id": 59634,
+        "login": "npimenof",
+        "url": "https://api.intra.42.fr/v2/users/npimenof"
+        },
+        {
+            "id": 12345,
+            "login": "randuser",
+            "url": "https://api.intra.42.fr/v2/users/npimenof"
+        }
+    ],
+"hiveboard": true
+}

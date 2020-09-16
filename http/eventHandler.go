@@ -2,6 +2,8 @@ package http
 
 import (
 	"encoding/json"
+	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -26,7 +28,8 @@ func newEventHandler() *eventHandler {
 	h.router.Get("/{eventID}/users", h.handleGetEventUsers)
 	h.router.Get("/users/{userID}", h.handleGetUserEvents)
 	// h.router.Get("/eventsusers", h.getEventsUsers)
-	h.router.Post("/", h.postEvent)
+	h.router.Post("/", h.postNewEvent)
+	h.router.Get("/asd", h.handleSub)
 	return h
 }
 
@@ -83,9 +86,14 @@ func (h *eventHandler) getEventByID(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(event)
 }
 
+// handleGetEventUsers return the participants of an event. If the event is a
+// 42 resource, the function will request the data from the 42api. Otherwise it will
+// get the ID and find the whole event object from the Hiveboard DB with
+// Mongodb.GetEventByID, but only return the participants (event_users).
 func (h *eventHandler) handleGetEventUsers(w http.ResponseWriter, r *http.Request) {
 	var err error
 	var eventUsers []hiveboard.EventUser
+	var event *hiveboard.Event
 	if hiveboard.Client == nil {
 		http.Error(w, "Not Authorized", 401)
 		return
@@ -95,10 +103,11 @@ func (h *eventHandler) handleGetEventUsers(w http.ResponseWriter, r *http.Reques
 		suffix := "events/" + eventID + "/users"
 		eventUsers, err = h.eventService2.API42.GetEventUsers(eventURL + suffix)
 	} else {
-		http.Error(w, "Our API does not support this feature yet", 500)
+		event, err = h.eventService2.Mongodb.GetEventByID(eventID)
+		eventUsers = event.EventUsers
 	}
 	if err != nil {
-		http.Error(w, "Internal Server Error", 500)
+		http.Error(w, err.Error(), 500)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
@@ -120,7 +129,7 @@ func (h *eventHandler) handleGetUserEvents(w http.ResponseWriter, r *http.Reques
 	json.NewEncoder(w).Encode(events)
 }
 
-func (h *eventHandler) postEvent(w http.ResponseWriter, r *http.Request) {
+func (h *eventHandler) postNewEvent(w http.ResponseWriter, r *http.Request) {
 	var newEvent hiveboard.Event
 	if hiveboard.Client == nil {
 		http.Error(w, "Not Authorized", 401)
@@ -141,21 +150,23 @@ func (h *eventHandler) postEvent(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(res)
 }
 
-// func (h *eventHandler) handleSub(w http.ResponseWriter, r *http.Request) {
-// 	// eventID := chi.URLParam(r, "eventID") + "/"
-// 	// the below method might actually work, but we do not have permissions
+func (h *eventHandler) handleSub(w http.ResponseWriter, r *http.Request) {
+	// eventID := chi.URLParam(r, "eventID") + "/"
+	// the below method might actually work, but we do not have permissions
 
-// 	res, err := hiveboard.Client.PostForm(eventURL+"events_users", url.Values{"events_user[event_id]": {"4376"}, "events_user[user_id]": {"59634"}})
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// 	body, err := ioutil.ReadAll(res.Body)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// 	fmt.Println(string(body))
-// 	fmt.Fprintf(w, "Subscribed")
-// }
+	res, err := hiveboard.Client.PostForm(eventURL+"events_users", url.Values{"events_user[event_id]": {"4937"}, "events_user[user_id]": {"59634"}})
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	fmt.Println(string(body))
+	fmt.Fprintf(w, string(body))
+}
 
 // 59634 me
 // 4376 Q&A

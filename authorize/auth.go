@@ -1,6 +1,7 @@
 package authorize
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -14,6 +15,10 @@ import (
 const (
 	ErrorState = hiveboard.Error("Invalid state value")
 )
+
+type TokenData struct {
+	ResourceOwnerID json.Number `json:"resource_owner_id"`
+}
 
 // GetURL configures Oauth2 and returns the AuthCodeURL string
 func GetURL() string {
@@ -41,10 +46,14 @@ func GetToken(code string, state string) {
 	}
 	hiveboard.Client = hiveboard.OauthConf.Client(oauth2.NoContext, hiveboard.OauthToken)
 	// This should be saved somewhere. No need to get the full username and stuff...
+	fmt.Println(hiveboard.OauthToken)
 	res, err := hiveboard.Client.Get("https://api.intra.42.fr/oauth/token/info")
 	if err != nil {
 		fmt.Println(err)
 	}
 	bod, _ := ioutil.ReadAll(res.Body)
 	fmt.Println(string(bod))
+	// var tokendata TokenData
+	// _ = json.Unmarshal(bod, &tokendata)
+	// fmt.Println(tokendata)
 }

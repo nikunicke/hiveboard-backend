@@ -64,8 +64,8 @@ type Event struct {
 	ProhibitionOfCancellation int         `bson:"prohibition_of_cancellation" json:"prohibition_of_cancellation"`
 	CreatedAt                 time.Time   `bson:"created_at" json:"created_at"`
 	UpdatedAt                 time.Time   `bson:"updated_at" json:"updated_at"`
-	Tags                      []string    `bson:"tags" json:"tags"`
-	Groups                    []string    `bson:"groups" json:"groups"`
+	CreatedBy                 EventUser   `bson:"created_by" json:"created_by"`
+	EventUsers                []EventUser `bson:"event_user" json:"event_user"`
 	Hiveboard                 bool        `bson:"hiveboard" json:"hiveboard"`
 }
 

@@ -20,8 +20,7 @@ type Server struct {
 	ln net.Listener
 
 	// EventService hiveboard.EventService
-	ES hiveboard.EventService2
-
+	ES          hiveboard.EventService2
 	UserService hiveboard.UserService
 
 	Addr        string
