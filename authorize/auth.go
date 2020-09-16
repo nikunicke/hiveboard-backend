@@ -25,6 +25,7 @@ func GetURL() string {
 	hiveboard.OauthConf = &oauth2.Config{
 		ClientID:     os.Getenv("UID42"),
 		ClientSecret: os.Getenv("SECRET42"),
+		Scopes:       []string{"public", "profile"},
 		RedirectURL:  "http://localhost:3000/callback/",
 		Endpoint: oauth2.Endpoint{
 			AuthURL:  "https://api.intra.42.fr/oauth/authorize",

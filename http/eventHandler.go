@@ -30,6 +30,7 @@ func newEventHandler() *eventHandler {
 	// h.router.Get("/eventsusers", h.getEventsUsers)
 	h.router.Post("/", h.postNewEvent)
 	h.router.Get("/asd", h.handleSub)
+	h.router.Get("/dsa", h.handleUnSub)
 	return h
 }
 
@@ -100,7 +101,7 @@ func (h *eventHandler) handleGetEventUsers(w http.ResponseWriter, r *http.Reques
 	}
 	eventID := chi.URLParam(r, "eventID")
 	if isNumeric(eventID) {
-		suffix := "events/" + eventID + "/users"
+		suffix := "events/" + eventID + "/events_users"
 		eventUsers, err = h.eventService2.API42.GetEventUsers(eventURL + suffix)
 	} else {
 		event, err = h.eventService2.Mongodb.GetEventByID(eventID)
@@ -165,6 +166,53 @@ func (h *eventHandler) handleSub(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	fmt.Println(string(body))
+	fmt.Fprintf(w, string(body))
+}
+
+func (h *eventHandler) handleUnSub(w http.ResponseWriter, r *http.Request) {
+	// eventID := chi.URLParam(r, "eventID") + "/"
+	// the below method might actually work, but we do not have permissions
+	// res, err := hiveboard.Client.PostForm(eventURL+"events_users", url.Values{"events_user[event_id]": {"4937"}, "events_user[user_id]": {"59634"}})
+	// if err != nil {
+	// 	http.Error(w, err.Error(), 500)
+	// 	return
+	// }
+	// body, err := ioutil.ReadAll(res.Body)
+	// if err != nil {
+	// 	http.Error(w, err.Error(), 500)
+	// 	return
+	// }
+	// fmt.Println(string(body))
+	// // fmt.Fprintf(w, string(body))
+	// req, err := http.NewRequest(http.MethodDelete, "https://api.intra.42.fr/v2/events_users/273034", nil)
+	// // res, err := hiveboard.Client.Delete("https://api.intra.42.fr/v2/events_users/273034")
+	// if err != nil {
+	// 	http.Error(w, err.Error(), 500)
+	// 	return
+	// }
+	// resp, err := hiveboard.Client.Do(req)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return
+	// }
+	// body, err := ioutil.ReadAll(resp.Body)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return
+	// }
+	// fmt.Println(resp.Status)
+	// fmt.Println(resp.Header)
+	// fmt.Println(string(body))
+	res, err := hiveboard.Client.Get("https://api.intra.42.fr/v2/events/4937/events_users?filter[user_id]=59634")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	fmt.Fprintf(w, string(body))
 }
 
