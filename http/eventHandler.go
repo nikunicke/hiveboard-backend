@@ -138,7 +138,7 @@ func (h *eventHandler) postNewEvent(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&newEvent)
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		http.Error(w, "Error decoding post data", 500)
 		return
 	}
 	res, err := h.eventService2.Mongodb.PostEvent(newEvent)
